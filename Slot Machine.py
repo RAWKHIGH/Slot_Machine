@@ -18,9 +18,9 @@ pygame.init()
 size = [651,588]
 screen = pygame.display.set_mode(size)
 
-pygame.display.set_caption("My Slot Machine")
+pygame.display.set_caption("Stephen'$ Slot Machine")
 
-#Loop until the user clicks the close button.
+#Loop until the user clicks the exit button.
 done = False
 
 # Used to manage how fast the screen updates
@@ -28,37 +28,48 @@ clock = pygame.time.Clock()
 
 font=pygame.font.Font(None,30)
 
+# Starting Values  
 Player_Money = 1000
 Jack_Pot = 500
 Bet = 0
 message = 'Place Your Bet'
 
+# Background Image
 background_image = pygame.image.load("slot-machine.png").convert()
 
+# Exit Button Image
 exit_image = pygame.image.load("exit.png").convert()
 exit_image.set_colorkey(white)
 
+# Restart Button Image
 restart_image = pygame.image.load("restart.png").convert()
 restart_image.set_colorkey(white)
 
+# Spin Button Image
 spin_image = pygame.image.load("spin.png").convert()
 spin_image.set_colorkey(white)
 
+# Preset Bet 100 Image
 bet100_image = pygame.image.load("bet100.png").convert()
 bet100_image.set_colorkey(white)
 
+# Preset Bet 50 Image
 bet50_image = pygame.image.load("bet50.png").convert()
 bet50_image.set_colorkey(white)
 
+# Starting Reel 1 Image
 reel1_image = pygame.image.load("blank.png").convert()
 reel1_image.set_colorkey(white)
 
+# Starting Reel 2 Image
 reel2_image = pygame.image.load("blank.png").convert()
 reel2_image.set_colorkey(white)
 
+# Starting Reel 3 Image
 reel3_image = pygame.image.load("blank.png").convert()
 reel3_image.set_colorkey(white)
 
+# Sounds
 reel_sound = pygame.mixer.Sound('3_beeps.wav')
 coin_sound = pygame.mixer.Sound('coin_drop.wav')
 jackpot_sound = pygame.mixer.Sound('Jackpot.wav')
@@ -96,7 +107,7 @@ def Reels():
 while done == False:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: # If user clicked close
-            done = True			# Flag that we are done so we exit this loop
+            done = True			
 
 	# Tracking mouse position and comparing it to where i want buttons
 	if event.type == pygame.MOUSEBUTTONDOWN:
@@ -148,17 +159,21 @@ while done == False:
 				if mouse_x <= spin_rect.topright[0] and mouse_y >= spin_rect.topright[1]:
 					if mouse_x <= spin_rect.bottomright[0] and mouse_y <= spin_rect.bottomright[1]:
 						
+						# Making sure the Bet does not exceed the current credits 
 						if Bet > Player_Money:
 							print ('Out of money')
 							message = 'Not Enough Credits'
+						# Making sure the Bet isn't 0
 						elif Bet == 0:
 							print ('Did Not Bet')
 							message = 'You Did Not Bet'
+						# Bet is good
+						# Spin Button was clicked
 						else:
 							print ('Spining')
 							reel_sound.play()
 							time.sleep(1)
-							Jack_Pot += (int(Bet*.15))
+							Jack_Pot += (int(Bet*.5))
 							win = False
 							Player_Money = Player_Money - Bet
 							Fruit_Reel = Reels()
@@ -273,38 +288,49 @@ while done == False:
 								reel3_image = pygame.image.load("Surprised_Emoticon.png").convert()
 							else:
 								reel3_image = pygame.image.load("blank.png").convert()
-								
+	
+	# Putting Background Image On Screen
 	screen.blit(background_image, [0,0])
-
+	
+	# Putting Exit Image on screen and a rectangle to compare for button
 	exit_rect = pygame.draw.rect(screen, black,(314,538, 50, 25,))
 	screen.blit(exit_image, [314,538])
 
+	# Putting Restart Image on screen and a rectangle to compare for button
 	restart_rect = pygame.draw.rect(screen, black,(520,420, 75, 24,))
 	screen.blit(restart_image, [520,420])
 
+	# Putting Spin Image on screen and a rectangle to compare for button
 	spin_rect = pygame.draw.rect(screen, black,(505,155,106,105,))
 	screen.blit(spin_image, [505,155])
 
+	# Putting Bet 100 Image on screen and a rectangle to compare for button
 	bet100_rect = pygame.draw.rect(screen, black,(562,366, 53, 52,))
 	screen.blit(bet100_image, [562,366])
 
+	# Putting Bet 50 Image on screen and a rectangle to compare for button
 	bet50_rect = pygame.draw.rect(screen, black,(505,366, 53, 52,))
 	screen.blit(bet50_image, [505,366])
 	
+	# Putting Reel Images on screen
 	screen.blit(reel1_image, [120,250])
 	screen.blit(reel2_image, [250,250])
 	screen.blit(reel3_image, [380,250])
 
+	# Deturmaning mouse position for button use and print statement for 
+	# when trying to aline everything
 	mouse_position = pygame.mouse.get_pos()
 	mouse_x = mouse_position[0]
 	mouse_y = mouse_position[1]
 	#print (mouse_position)
 	
+	# assigning text to veriables
 	jackpotText = font.render("JackPot: "+str(Jack_Pot), 1, white)
 	player_moneyText = font.render(str(Player_Money), 1, black)
 	betText = font.render(str(Bet), 1, black)
 	messageText = font.render(str(message), 1, white)
 
+	# Place text on screen
 	screen.blit(jackpotText, (245, 125))
 	screen.blit(player_moneyText, (539, 71))
 	screen.blit(betText, (555, 300))
